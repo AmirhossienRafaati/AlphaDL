@@ -1,0 +1,22 @@
+{
+  "job_id": "api_7c8e1731b41f43b5afa78ac7",
+  "mode": "zip_split",
+  "file_url": "https://vip-dl3.myalphadl.com/aS_c5VJMHdbKj-FO3AKEUA/Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL.mkv",
+  "suggested_filename": "Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL.mkv",
+  "total_size_bytes": 115455436,
+  "created_at_utc": "2026-05-13T15:19:13.062771+00:00",
+  "zip_folder": "jobs/api_7c8e1731b41f43b5afa78ac7/zip",
+  "zip_main_file": "Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL_split.zip",
+  "zip_parts": [
+    {
+      "name": "Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL_split.z01",
+      "path": "jobs/api_7c8e1731b41f43b5afa78ac7/zip/Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL_split.z01",
+      "size_bytes": 94371840
+    },
+    {
+      "name": "Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL_split.zip",
+      "path": "jobs/api_7c8e1731b41f43b5afa78ac7/zip/Rent.A.Girlfriend.S05E05.WEB-DL.480p.AlphaDL_split.zip",
+      "size_bytes": 21083846
+    }
+  ]
+}
