@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Validate inputs
         shell: bash
@@ -39,6 +40,8 @@ jobs:
 
       - name: Purge job folder from Git history
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -46,14 +49,39 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
 
           BRANCH="${GITHUB_REF_NAME:-main}"
-          ORIGIN_URL="$(git remote get-url origin)"
+          AUTH_REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          git config --global http.version HTTP/1.1
+          git config --global http.postBuffer 524288000
+          git config --global pack.threads 1
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # git-filter-repo rewrites history and may remove origin as a safety
-          # measure, so keep the authenticated remote URL and restore it.
+          # measure, so restore a fresh token-backed remote before pushing.
           git filter-repo --force --path "jobs/$JOB_ID" --invert-paths
 
-          if ! git remote get-url origin >/dev/null 2>&1; then
-            git remote add origin "$ORIGIN_URL"
-          fi
+          git remote remove origin >/dev/null 2>&1 || true
+          git remote add origin "$AUTH_REMOTE"
 
-          git push origin "HEAD:$BRANCH" --force
+          git gc --prune=now
+
+          LOCAL_SHA="$(git rev-parse HEAD)"
+          for attempt in 1 2 3; do
+            echo "Force pushing purged history, attempt $attempt..."
+            if git push origin "+HEAD:$BRANCH"; then
+              echo "Purge pushed successfully."
+              exit 0
+            fi
+
+            REMOTE_SHA="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}' || true)"
+            if [ "$REMOTE_SHA" = "$LOCAL_SHA" ]; then
+              echo "Remote branch already points at the purged commit."
+              exit 0
+            fi
+
+            sleep $((attempt * 15))
+          done
+
+          echo "Could not push purged history after retries." >&2
+          exit 1
