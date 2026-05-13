@@ -1,5 +1,5 @@
-name: Purge Job
-run-name: MattDownloader purge ${{ inputs.job_id }}
+name: Delete Job
+run-name: MattDownloader delete ${{ inputs.job_id }}
 
 on:
   workflow_dispatch:
@@ -11,13 +11,13 @@ on:
 permissions:
   contents: write
 
-# Keep one writer at a time so purge jobs do not fight download jobs during git push.
+# Keep one writer at a time so delete jobs do not fight download jobs during git push.
 concurrency:
   group: download-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
-  purge:
+  delete:
     runs-on: ubuntu-latest
     env:
       JOB_ID: ${{ inputs.job_id }}
@@ -38,50 +38,42 @@ jobs:
             exit 1
           fi
 
-      - name: Purge job folder from Git history
+      - name: Delete job folder
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
-          python3 -m pip install --user git-filter-repo
-          export PATH="$HOME/.local/bin:$PATH"
-
           BRANCH="${GITHUB_REF_NAME:-main}"
           AUTH_REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
           git config --global http.version HTTP/1.1
           git config --global http.postBuffer 524288000
-          git config --global pack.threads 1
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "$AUTH_REMOTE"
 
-          # git-filter-repo rewrites history and may remove origin as a safety
-          # measure, so restore a fresh token-backed remote before pushing.
-          git filter-repo --force --path "jobs/$JOB_ID" --invert-paths
+          if [ ! -e "jobs/$JOB_ID" ]; then
+            echo "jobs/$JOB_ID does not exist on this branch. Nothing to delete."
+            exit 0
+          fi
 
-          git remote remove origin >/dev/null 2>&1 || true
-          git remote add origin "$AUTH_REMOTE"
+          git rm -r --ignore-unmatch "jobs/$JOB_ID"
+          if git diff --cached --quiet; then
+            echo "No tracked files found for jobs/$JOB_ID. Nothing to delete."
+            exit 0
+          fi
 
-          git gc --prune=now
-
-          LOCAL_SHA="$(git rev-parse HEAD)"
+          git commit -m "Delete MattDownloader job $JOB_ID"
           for attempt in 1 2 3; do
-            echo "Force pushing purged history, attempt $attempt..."
-            if git push origin "+HEAD:$BRANCH"; then
-              echo "Purge pushed successfully."
+            echo "Pushing delete commit, attempt $attempt..."
+            if git push origin "HEAD:$BRANCH"; then
+              echo "Job files deleted successfully."
               exit 0
             fi
-
-            REMOTE_SHA="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}' || true)"
-            if [ "$REMOTE_SHA" = "$LOCAL_SHA" ]; then
-              echo "Remote branch already points at the purged commit."
-              exit 0
-            fi
-
             sleep $((attempt * 15))
           done
 
-          echo "Could not push purged history after retries." >&2
+          echo "Could not push delete commit after retries." >&2
           exit 1
