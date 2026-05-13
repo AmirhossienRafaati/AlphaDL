@@ -1,5 +1,5 @@
-name: Delete Job
-run-name: MattDownloader delete ${{ inputs.job_id }}
+name: Purge Job
+run-name: MattDownloader purge ${{ inputs.job_id }}
 
 on:
   workflow_dispatch:
@@ -11,13 +11,13 @@ on:
 permissions:
   contents: write
 
-# Keep one writer at a time so delete jobs do not fight download jobs during git push.
+# Keep one writer at a time so purge jobs do not fight download jobs during git push.
 concurrency:
   group: download-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
-  delete:
+  purge:
     runs-on: ubuntu-latest
     env:
       JOB_ID: ${{ inputs.job_id }}
@@ -37,27 +37,23 @@ jobs:
             exit 1
           fi
 
-      - name: Delete job folder
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf "jobs/$JOB_ID"
-
-      - name: Commit delete
+      - name: Purge job folder from Git history
         shell: bash
         run: |
           set -euo pipefail
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 -m pip install --user git-filter-repo
+          export PATH="$HOME/.local/bin:$PATH"
 
-          git pull --rebase origin "${GITHUB_REF_NAME:-main}"
-          mkdir -p jobs
-          git add -A jobs
+          BRANCH="${GITHUB_REF_NAME:-main}"
+          ORIGIN_URL="$(git remote get-url origin)"
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "Delete MattDownloader job $JOB_ID"
-            git push
+          # git-filter-repo rewrites history and may remove origin as a safety
+          # measure, so keep the authenticated remote URL and restore it.
+          git filter-repo --force --path "jobs/$JOB_ID" --invert-paths
+
+          if ! git remote get-url origin >/dev/null 2>&1; then
+            git remote add origin "$ORIGIN_URL"
           fi
+
+          git push origin "HEAD:$BRANCH" --force
