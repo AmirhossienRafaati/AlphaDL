@@ -1,0 +1,22 @@
+{
+  "job_id": "api_f9f960ada3be4f7eb2bd5deb",
+  "mode": "zip_split",
+  "file_url": "https://vip-dl2.myalphadl.com/1GlgyDsbif05C1W_L2rbyg/Devil.May.C.2025.S02E02.480p.AlphaDL.mkv",
+  "suggested_filename": "Devil.May.C.2025.S02E02.480p.AlphaDL.mkv",
+  "total_size_bytes": 137099192,
+  "created_at_utc": "2026-05-13T20:25:24.950053+00:00",
+  "zip_folder": "jobs/api_f9f960ada3be4f7eb2bd5deb/zip",
+  "zip_main_file": "Devil.May.C.2025.S02E02.480p.AlphaDL_split.zip",
+  "zip_parts": [
+    {
+      "name": "Devil.May.C.2025.S02E02.480p.AlphaDL_split.z01",
+      "path": "jobs/api_f9f960ada3be4f7eb2bd5deb/zip/Devil.May.C.2025.S02E02.480p.AlphaDL_split.z01",
+      "size_bytes": 94371840
+    },
+    {
+      "name": "Devil.May.C.2025.S02E02.480p.AlphaDL_split.zip",
+      "path": "jobs/api_f9f960ada3be4f7eb2bd5deb/zip/Devil.May.C.2025.S02E02.480p.AlphaDL_split.zip",
+      "size_bytes": 42727586
+    }
+  ]
+}
