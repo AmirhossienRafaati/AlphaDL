@@ -1,0 +1,37 @@
+{
+  "job_id": "api_5b3fd5dcd1274c0b88c1eb36",
+  "mode": "zip_split",
+  "file_url": "https://vip-dl4.myalphadl.com/2dIpLP6misYeFDjEd0EeMQ/Filing.for.Love.S01E08.720p.x264.AlphaDL.mkv",
+  "suggested_filename": "Filing.for.Love.S01E08.720p.x264.AlphaDL.mkv",
+  "total_size_bytes": 395669363,
+  "created_at_utc": "2026-05-17T17:05:01.135080+00:00",
+  "zip_folder": "jobs/api_5b3fd5dcd1274c0b88c1eb36/zip",
+  "zip_main_file": "Filing.for.Love.S01E08.720p.x264.AlphaDL_split.zip",
+  "zip_parts": [
+    {
+      "name": "Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z01",
+      "path": "jobs/api_5b3fd5dcd1274c0b88c1eb36/zip/Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z01",
+      "size_bytes": 94371840
+    },
+    {
+      "name": "Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z02",
+      "path": "jobs/api_5b3fd5dcd1274c0b88c1eb36/zip/Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z02",
+      "size_bytes": 94371840
+    },
+    {
+      "name": "Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z03",
+      "path": "jobs/api_5b3fd5dcd1274c0b88c1eb36/zip/Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z03",
+      "size_bytes": 94371840
+    },
+    {
+      "name": "Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z04",
+      "path": "jobs/api_5b3fd5dcd1274c0b88c1eb36/zip/Filing.for.Love.S01E08.720p.x264.AlphaDL_split.z04",
+      "size_bytes": 94371840
+    },
+    {
+      "name": "Filing.for.Love.S01E08.720p.x264.AlphaDL_split.zip",
+      "path": "jobs/api_5b3fd5dcd1274c0b88c1eb36/zip/Filing.for.Love.S01E08.720p.x264.AlphaDL_split.zip",
+      "size_bytes": 18182245
+    }
+  ]
+}
